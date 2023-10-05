@@ -14,14 +14,14 @@ public struct BitVector: RandomAccessCollection {
     public mutating func append(_ value: Bool) {
         let storageCount = storage.count
         if count < storageCount * StorageType.bitWidth {
-            let mask: UInt = 1 << (count % StorageType.bitWidth)
+            let mask: StorageType = 1 << (count % StorageType.bitWidth)
             if value {
                 storage[storageCount - 1] |= mask
             } else {
                 storage[storageCount - 1] &= ~mask
             }
         } else {
-            storage.append(UInt(value ? 1 : 0))
+            storage.append(StorageType(value ? 1 : 0))
         }
         count += 1
     }
@@ -33,7 +33,7 @@ public struct BitVector: RandomAccessCollection {
         }
         set(newValue) {
             precondition((0..<count).contains(index), "Index \(index) out of range")
-            let mask: UInt = 1 << (index % StorageType.bitWidth)
+            let mask: StorageType = 1 << (index % StorageType.bitWidth)
             if newValue {
                 storage[index / StorageType.bitWidth] |= mask
             } else {
